@@ -210,18 +210,15 @@ async def create_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ================= MAIN =================
 
-async def main():
-    app = ApplicationBuilder().token(TOKEN).build()
+# ============= MAIN =============
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("broadcast", broadcast))
-    app.add_handler(CommandHandler("done", create_pdf))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, menu_handler))
-    app.add_handler(MessageHandler(filters.PHOTO, photo_handler))
+app = ApplicationBuilder().token(TOKEN).build()
 
-    print("🚀 Ultra AI Bot Running...")
-    await app.run_polling()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("help", help_command))
+app.add_handler(CommandHandler("pdf", create_pdf))
+app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+app.add_handler(MessageHandler(filters.Document.IMAGE, handle_document))
 
-
-if __name__ == "__main__":
-    asyncio.run(main())
+print("🚀 Ultra AI Bot Running...")
+app.run_polling()
